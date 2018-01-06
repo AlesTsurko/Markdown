@@ -91,22 +91,15 @@ IoObject *IoMarkdown_toHTML(IoMarkdown *self, IoObject *locals, IoMessage *m)
 	char *html = 0;
     int flags = MKD_NOPANTS|MKD_FENCEDCODE|MKD_GITHUBTAGS|MKD_URLENCODEDANCHOR;
     MMIOT *document = 0;
-    int docSize = 0;
 	IoSeq *outputSequence = IoSeq_new(IOSTATE);
 
     document = mkd_string(UTF8CSTRING(input), IoSeq_rawSize(input), flags);
     mkd_compile(document, flags);
-    docSize = mkd_document(document, &html);
+    mkd_document(document, &html);
+
+    UArray_setCString_(DATA(outputSequence), html);
     mkd_cleanup(document);
 	mkd_deallocate_tags();
-
-    /* UArray_rawSetItemType_(self, CTYPE_uint8_t); */
-    /* DATA(outputSequence)->itemSize = sizeof(html); */
-    DATA(outputSequence)->size = docSize + 1;
-    DATA(outputSequence)->data = io_realloc(DATA(outputSequence)->data, (docSize + 1) * sizeof(html));
-    /* strcpy(DATA(outputSequence)->data, html); */
-    memcpy(DATA(outputSequence)->data, html, (docSize + 1) * sizeof(html));
-    /* UArray_setData_type_size_copy_(DATA(outputSequence), html, CTYPE_uint8_t, docSize, 1); */
 
 	return outputSequence;
 }
