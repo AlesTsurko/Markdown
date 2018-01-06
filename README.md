@@ -12,7 +12,7 @@ eerie install https://github.com/AlesTsurko/Markdown.git
 
 ## Usage
 
-```
+```Io
 Markdown
 
 "# Hello" markdownToHTML // will return <h1>Hello</h1>
