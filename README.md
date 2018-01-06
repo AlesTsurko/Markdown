@@ -1,6 +1,6 @@
 # Markdown
 
-Markdown parser for Io based on [discount](https://github.com/Orc/discount).
+Markdown parser for Io. Based on [discount](https://github.com/Orc/discount).
 
 ## Installation
 
