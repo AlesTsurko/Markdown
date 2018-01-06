@@ -88,10 +88,10 @@ IoObject *IoMarkdown_toHTML(IoMarkdown *self, IoObject *locals, IoMessage *m)
 {
     //doc Markdown toHTML(string) Gets markdown string as input and returns generated HTML.
     IoSeq *input = IoMessage_locals_seqArgAt_(m, locals, 0);
-	char *html = 0;
+    char *html = 0;
     int flags = MKD_NOPANTS|MKD_FENCEDCODE|MKD_GITHUBTAGS|MKD_URLENCODEDANCHOR;
     MMIOT *document = 0;
-	IoSeq *outputSequence = IoSeq_new(IOSTATE);
+    IoSeq *outputSequence = IoSeq_new(IOSTATE);
 
     document = mkd_string(UTF8CSTRING(input), IoSeq_rawSize(input), flags);
     mkd_compile(document, flags);
@@ -99,7 +99,7 @@ IoObject *IoMarkdown_toHTML(IoMarkdown *self, IoObject *locals, IoMessage *m)
 
     UArray_setCString_(DATA(outputSequence), html);
     mkd_cleanup(document);
-	mkd_deallocate_tags();
+    mkd_deallocate_tags();
 
-	return outputSequence;
+    return outputSequence;
 }
