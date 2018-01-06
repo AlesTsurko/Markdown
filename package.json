@@ -1,0 +1,15 @@
+{
+  "name":         "Markdown",
+  "version":      "0.1",
+  "description":  "Markdown parser for Io.",
+  "author":       "Ales Tsurko",
+  "website":      "",
+  "readme":       "README.md",
+  "protos":       ["Markdown"],
+  "dependencies": {
+    "libs":     ["libmarkdown"],
+    "headers":  ["mkdio.h"],
+    "protos":   [],
+    "packages": ["https://github.com/bekkopen/jasmineio.git"]
+  }
+}
