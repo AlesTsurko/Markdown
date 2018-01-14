@@ -1,0 +1,24 @@
+doc Markdown toHTML(string)
+ Gets markdown string as input and returns generated HTML.
+------
+metadoc Markdown copyright 
+Ales Tsurko
+------
+metadoc Markdown license 
+MIT
+------
+metadoc Markdown category 
+API
+------
+metadoc Markdown description 
+Markdown parser.
+------
+doc Sequence markdownToHTML 
+Inteprets the sequence as a markdown and returns HTML code.
+------
+metadoc Sequence category 
+API
+------
+metadoc Sequence description 
+Sequence extension.
+------
