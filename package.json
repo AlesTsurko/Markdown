@@ -10,6 +10,6 @@
     "libs":     ["libmarkdown"],
     "headers":  ["mkdio.h"],
     "protos":   [],
-    "packages": ["https://github.com/bekkopen/jasmineio.git"]
+    "packages": []
   }
 }
