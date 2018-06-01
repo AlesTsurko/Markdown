@@ -9,8 +9,8 @@ AddonBuilder clone do(
         // Compile
         if((platform == "windows") or (platform == "mingw"),
             // compile for windows
-            appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asOSPath)
-            appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asOSPath)
+            appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
+            appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
             ,
             // Download
             uri := "https://github.com/Orc/discount.git"
@@ -22,7 +22,7 @@ AddonBuilder clone do(
         )
     )
 
-    dependsOnLib("libmarkdown")
+    dependsOnLib("markdown")
     dependsOnHeader("mkdio.h")
 
     clean := method(
