@@ -10,14 +10,14 @@ AddonBuilder clone do(
         appendHeaderSearchPath(srcDir path)
     ) 
 
+    downloadDiscount
+
     compileDiscountIfNeeded := method(
-        if((platform != "windows") and(platform != mingw),
+        if((platform != "windows") and(platform != "mingw"),
             Eerie sh("cd #{srcDir path} && ./configure.sh --shared --pkg-config && make" interpolate)
         )
     )
 
-
-    downloadDiscount
     compileDiscountIfNeeded
 
     hasLib := libSearchPaths detect(path, Directory with(path) files detect(name containsSeq("libmarkdown")))
