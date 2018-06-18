@@ -17,8 +17,8 @@ AddonBuilder clone do(
     )
 
 
-    self downloadDiscount
-    self compileDiscountIfNeeded
+    downloadDiscount
+    compileDiscountIfNeeded
 
     hasLib := libSearchPaths detect(path, Directory with(path) files detect(name containsSeq("libmarkdown")))
     if(hasLib == nil,
