@@ -7,7 +7,7 @@ AddonBuilder clone do(
         if(srcDir exists, srcDir remove; srcDir create, srcDir create)
         packageDownloader := Eerie PackageDownloader detect(uri, srcDir path)
         packageDownloader download
-        appendHeaderSearchPath(srcDir path)
+        appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/source/discount") asIoPath)
     ) 
 
     downloadDiscount
@@ -24,13 +24,12 @@ AddonBuilder clone do(
     if(hasLib == nil,
         writeln("No libmarkdown installed — attempting to compile and install")
 
-        // Compile
+        // Install
         if((platform == "windows") or (platform == "mingw"),
-            // compile for windows
             appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
             appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
             ,
-            Eerie sh("make install" interpolate)
+            Eerie sh("cd #{srcDir path} && make install" interpolate)
         )
     )
 
