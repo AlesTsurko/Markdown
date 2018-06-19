@@ -7,23 +7,30 @@ AddonBuilder clone do(
         if(srcDir exists, srcDir remove; srcDir create, srcDir create)
         packageDownloader := Eerie PackageDownloader detect(uri, srcDir path)
         packageDownloader download
-        appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/source/discount") asIoPath)
-        appendLibSearchPath(Path with(Directory currentWorkingDirectory, "/source/discount") asIoPath)
+        appendHeaderSearchPath(srcDir path asIoPath)
     ) 
 
     downloadDiscount
 
     compileDiscountIfNeeded := method(
         if((platform != "windows") and(platform != "mingw"),
-            Eerie sh("cd #{srcDir path} && ./configure.sh --shared && make" interpolate)
+            Eerie sh("cd #{srcDir path} && ./configure.sh --shared --prefix=#{Directory currentWorkingDirectory}/_build && make" interpolate)
         )
     )
 
     compileDiscountIfNeeded
 
-    if((platform == "windows") or (platform == "mingw"),
-        appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
-        appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
+    hasLib := libSearchPaths detect(path, Directory with(path) files detect(name containsSeq("libmarkdown")))
+    if(hasLib == nil,
+        writeln("No libmarkdown installed — attempting to compile and install")
+
+        // Install
+        if((platform == "windows") or (platform == "mingw"),
+            appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
+            appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
+            ,
+            Eerie sh("cd #{srcDir path} && make install" interpolate)
+        )
     )
 
     dependsOnLib("markdown")
