@@ -14,7 +14,7 @@ AddonBuilder clone do(
 
     compileDiscountIfNeeded := method(
         if((platform != "windows") and(platform != "mingw"),
-            Eerie sh("cd #{srcDir path} && ./configure.sh --shared --prefix=#{Directory currentWorkingDirectory}/_build && make" interpolate)
+            Eerie sh("cd #{srcDir path} && ./configure.sh --shared && make" interpolate)
         )
     )
 
@@ -39,7 +39,7 @@ AddonBuilder clone do(
     clean := method(
         resend
         if((platform == "windows") or (platform == "mingw"),
-            "no clean up command for windows platform" println
+            "there is no clean command for windows platform" println
             ,
             System system("cd #{srcDir path} && make clean" interpolate)
         )
