@@ -14,25 +14,15 @@ AddonBuilder clone do(
     downloadDiscount
 
     compileDiscountIfNeeded := method(
-        if((platform != "windows") and(platform != "mingw"),
-            Eerie sh("rm -f *-stdout && cd #{srcDir path} && ./configure.sh --shared --prefix=#{srcDir path}/_build && make" interpolate)
+        if((platform == "windows") or(platform == "mingw"),
+            appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
+            appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
+            ,
+            Eerie sh("cd #{srcDir path} && ./configure.sh && make" interpolate)
         )
     )
 
     compileDiscountIfNeeded
-
-    hasLib := libSearchPaths detect(path, Directory with(path) files detect(name containsSeq("libmarkdown")))
-    if(hasLib == nil,
-        writeln("No libmarkdown installed — attempting to compile and install")
-
-        // Install
-        if((platform == "windows") or (platform == "mingw"),
-            appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
-            appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
-            ,
-            Eerie sh("cd #{srcDir path} && make install" interpolate)
-        )
-    )
 
     dependsOnLib("markdown")
     dependsOnHeader("mkdio.h")
