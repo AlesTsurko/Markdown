@@ -8,13 +8,14 @@ AddonBuilder clone do(
         packageDownloader := Eerie PackageDownloader detect(uri, srcDir path)
         packageDownloader download
         appendHeaderSearchPath(srcDir path asIoPath)
+        appendLibSearchPath(srcDir path asIoPath)
     ) 
 
     downloadDiscount
 
     compileDiscountIfNeeded := method(
         if((platform != "windows") and(platform != "mingw"),
-            Eerie sh("rm -f *-stdout && cd #{srcDir path} && ./configure.sh --shared && make" interpolate)
+            Eerie sh("rm -f *-stdout && cd #{srcDir path} && ./configure.sh --shared --prefix=#{srcDir path}/_build && make" interpolate)
         )
     )
 
@@ -29,7 +30,7 @@ AddonBuilder clone do(
             appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
             appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
             ,
-            System runCommand("cd #{srcDir path} && sudo make install" interpolate)
+            Eerie sh("cd #{srcDir path} && make install" interpolate)
         )
     )
 
