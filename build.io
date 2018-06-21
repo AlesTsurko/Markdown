@@ -18,7 +18,7 @@ AddonBuilder clone do(
             appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
             appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
             ,
-            Eerie sh("cd #{srcDir path} && ./configure.sh && make" interpolate)
+            Eerie sh("cd #{srcDir path} && CC='cc -fPIC' ./configure.sh && make" interpolate)
         )
     )
 
