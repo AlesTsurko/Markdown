@@ -14,7 +14,7 @@ AddonBuilder clone do(
 
     compileDiscountIfNeeded := method(
         if((platform != "windows") and(platform != "mingw"),
-            Eerie sh("cd #{srcDir path} && ./configure.sh --shared && make" interpolate)
+            Eerie sh("rm -f *-stdout && cd #{srcDir path} && ./configure.sh --shared && make" interpolate)
         )
     )
 
@@ -29,7 +29,7 @@ AddonBuilder clone do(
             appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
             appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
             ,
-            Eerie sh("cd #{srcDir path} && make install" interpolate)
+            System runCommand("cd #{srcDir path} && sudo make install" interpolate)
         )
     )
 
