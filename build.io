@@ -7,13 +7,14 @@ AddonBuilder clone do(
             appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
             appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "/deps/w64/include") asIoPath)
             ,
-            Eerie sh("cd #{srcDir path} && CC='cc -fPIC' ./configure.sh && make" interpolate)
+            prefix := Directory currentWorkingDirectory .. "/_build"
+            Eerie sh("cd #{srcDir path} && CC='cc -fPIC' ./configure.sh --prefix=#{prefix} && make && make install" interpolate)
+            appendHeaderSearchPath(Path with(Directory currentWorkingDirectory, "_build/include") asIoPath)
+            appendLibSearchPath(Path with(Directory currentWorkingDirectory, "_build/lib") asIoPath)
         )
     )
 
     compileDiscountIfNeeded
-
-    appendHeaderSearchPath(srcDir path asIoPath)
 
     dependsOnLib("markdown")
     dependsOnHeader("mkdio.h")

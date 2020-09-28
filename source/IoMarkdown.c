@@ -89,7 +89,7 @@ IoObject *IoMarkdown_toHTML(IoMarkdown *self, IoObject *locals, IoMessage *m)
 {
     IoSeq *input = IoMessage_locals_seqArgAt_(m, locals, 0);
     char *html = 0;
-    int flags = MKD_NOPANTS|MKD_FENCEDCODE|MKD_GITHUBTAGS|MKD_TABSTOP;
+    int flags = MKD_NOPANTS|MKD_FENCEDCODE|MKD_GITHUBTAGS|MKD_URLENCODEDANCHOR|MKD_TABSTOP;
     MMIOT *document = 0;
     IoSeq *outputSequence = IoSeq_new(IOSTATE);
 
@@ -99,7 +99,6 @@ IoObject *IoMarkdown_toHTML(IoMarkdown *self, IoObject *locals, IoMessage *m)
 
     UArray_setCString_(DATA(outputSequence), html);
     mkd_cleanup(document);
-    mkd_deallocate_tags();
 
     return outputSequence;
 }
