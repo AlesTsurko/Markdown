@@ -4,7 +4,7 @@
 //metadoc Markdown description Markdown parser.
 
 #include <string.h>
-#include "discount/mkdio.h"
+#include "mkdio.h"
 #include "IoSeq.h"
 #include "IoState.h"
 #include "IoMarkdown.h"

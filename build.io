@@ -13,6 +13,8 @@ AddonBuilder clone do(
 
     compileDiscountIfNeeded
 
+    appendHeaderSearchPath(srcDir path asIoPath)
+
     dependsOnLib("markdown")
     dependsOnHeader("mkdio.h")
 
