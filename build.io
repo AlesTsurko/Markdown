@@ -2,17 +2,6 @@ AddonBuilder clone do(
 
     srcDir := Directory with(Directory currentWorkingDirectory .. "/source/discount")
 
-    downloadDiscount := method(
-        uri := "https://github.com/Orc/discount.git"
-        if(srcDir exists, srcDir remove; srcDir create, srcDir create)
-        packageDownloader := Eerie PackageDownloader detect(uri, srcDir path)
-        packageDownloader download
-        appendHeaderSearchPath(srcDir path asIoPath)
-        appendLibSearchPath(srcDir path asIoPath)
-    ) 
-
-    downloadDiscount
-
     compileDiscountIfNeeded := method(
         if((platform == "windows") or(platform == "mingw"),
             appendLibSearchPath(Path with(Directory currentWorkingDirectory, "deps/w64/lib") asIoPath)
