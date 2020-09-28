@@ -3,6 +3,7 @@
 
 #include <mkdio.h>
 
-void show_flags(int byname, int verbose, mkd_flag_t *flags);
+char *set_flag(mkd_flag_t *flags, char *optionstring);
+void show_flags(int byname, int verbose);
 
 #endif/*PGM_OPTIONS_D*/

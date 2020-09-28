@@ -19,9 +19,9 @@ RSLT='<dl>
 </dl>'
 
 # discount style
-try -fdldiscount '=tag= generates definition lists' "$SRC" "$RSLT"
+try -fdefinitionlist '=tag= generates definition lists' "$SRC" "$RSLT"
 
-try -fdldiscount 'one item with two =tags=' \
+try 'one item with two =tags=' \
     '=this=
 =is=
     A test, eh?' \
@@ -32,7 +32,7 @@ try -fdldiscount 'one item with two =tags=' \
 </dl>'
 
 # extra style
-try -fdlextra '=tag= does nothing' "$SRC" \
+try -fnodefinitionlist,dlextra '=tag= does nothing' "$SRC" \
     '<p>=this=
     is an ugly
 =test=
@@ -90,12 +90,12 @@ RSLT='<p>foo
 
 <p>=this=
     is ugly</p>'
-try -fdlist,nodldiscount,nodlextra '... with definitionlists enabled but all styles disabled' \
+try -fnodldiscount '... with definitionlists enabled but all styles disabled' \
 "$SRC" \
 "$RSLT"
-#try -fnodefinitionlist,dldiscount,dlextra '... with definitionlists disabled but all styles enabled' \
-#    "$SRC" \
-#    "$RSLT"
+try -fnodefinitionlist,dldiscount,dlextra '... with definitionlists disabled but all styles enabled' \
+    "$SRC" \
+    "$RSLT"
 
 summary $0
 exit $rc

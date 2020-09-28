@@ -256,7 +256,7 @@ istag(int *p, char *pat)
 /* finclude() includes some (unformatted) source
  */
 static void
-finclude(MMIOT *doc, FILE *out, mkd_flag_t *flags, int whence)
+finclude(MMIOT *doc, FILE *out, int flags, int whence)
 {
     int c;
     Cstring include;
@@ -287,7 +287,7 @@ finclude(MMIOT *doc, FILE *out, mkd_flag_t *flags, int whence)
 /* fdirname() prints out the directory part of a path
  */
 static void
-fdirname(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
+fdirname(MMIOT *doc, FILE *output, int flags, int whence)
 {
     char *p;
 
@@ -299,7 +299,7 @@ fdirname(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
 /* fbasename() prints out the file name part of a path
  */
 static void
-fbasename(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
+fbasename(MMIOT *doc, FILE *output, int flags, int whence)
 {
     char *p;
 
@@ -318,7 +318,7 @@ fbasename(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
 /* ftitle() prints out the document title
  */
 static void
-ftitle(MMIOT *doc, FILE* output, mkd_flag_t *flags, int whence)
+ftitle(MMIOT *doc, FILE* output, int flags, int whence)
 {
     char *h;
     h = mkd_doc_title(doc);
@@ -339,22 +339,19 @@ ftitle(MMIOT *doc, FILE* output, mkd_flag_t *flags, int whence)
 /* fdate() prints out the document date
  */
 static void
-fdate(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
+fdate(MMIOT *doc, FILE *output, int flags, int whence)
 {
     char *h;
 
-    if ( (h = mkd_doc_date(doc)) || ( infop && (h = ctime(&infop->st_mtime)) ) ) {
-	mkd_set_flag_num(flags, MKD_TAGTEXT);
-	mkd_generateline(h, strlen(h), output, flags);
-	mkd_clr_flag_num(flags, MKD_TAGTEXT);
-    }
+    if ( (h = mkd_doc_date(doc)) || ( infop && (h = ctime(&infop->st_mtime)) ) )
+	mkd_generateline(h, strlen(h), output, flags|MKD_TAGTEXT);
 }
 
 
 /* fauthor() prints out the document author
  */
 static void
-fauthor(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
+fauthor(MMIOT *doc, FILE *output, int flags, int whence)
 {
     char *h = mkd_doc_author(doc);
 
@@ -372,7 +369,7 @@ fauthor(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
  * tabular versions of the flags.
  */
 static void
-fconfig(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
+fconfig(MMIOT *doc, FILE *output, int flags, int whence)
 {
     mkd_mmiot_flags(output, doc, (whence & (INHEAD|INTAG)) ? 0 : 1);
 }
@@ -381,7 +378,7 @@ fconfig(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
 /* fversion() prints out the document version
  */
 static void
-fversion(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
+fversion(MMIOT *doc, FILE *output, int flags, int whence)
 {
     fwrite(markdown_version, strlen(markdown_version), 1, output);
 }
@@ -390,7 +387,7 @@ fversion(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
 /* fbody() prints out the document
  */
 static void
-fbody(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
+fbody(MMIOT *doc, FILE *output, int flags, int whence)
 {
     mkd_generatehtml(doc, output);
 }
@@ -398,7 +395,7 @@ fbody(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
 /* ftoc() prints out the table of contents
  */
 static void
-ftoc(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
+ftoc(MMIOT *doc, FILE *output, int flags, int whence)
 {
     mkd_generatetoc(doc, output);
 }
@@ -406,7 +403,7 @@ ftoc(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
 /* fstyle() prints out the document's style section
  */
 static void
-fstyle(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
+fstyle(MMIOT *doc, FILE *output, int flags, int whence)
 {
     mkd_generatecss(doc, output);
 }
@@ -428,7 +425,7 @@ fstyle(MMIOT *doc, FILE *output, mkd_flag_t *flags, int whence)
 static struct _keyword {
     char *kw;
     int where;
-    void (*what)(MMIOT*,FILE*,mkd_flag_t *,int);
+    void (*what)(MMIOT*,FILE*,int,int);
 } keyword[] = { 
     { "author?>",  0xffff, fauthor },
     { "body?>",    INBODY, fbody },
@@ -445,34 +442,6 @@ static struct _keyword {
 #define NR(x)	(sizeof x / sizeof x[0])
 
 
-/* set up flags to pass into the grinder
- */
-static void
-setup_flags(mkd_flag_t *flagp, int where)
-{
-#ifdef THEME_DL_MODE
-    switch (THEME_DL_MODE) {
-    case 3: mkd_set_flag_num(flagp, MKD_DLEXTRA);
-    case 1: mkd_set_flag_num(flagp, MKD_DLDISCOUNT);
-	    break;
-    case 2: mkd_set_flag_num(flagp, MKD_DLEXTRA);
-	    break;
-    }
-#endif
-#ifdef THEME_FENCED_CODE
-    mkd_set_flag_num(flagp, MKD_FENCEDCODE);
-#endif
-
-    mkd_set_flag_num(flagp, MKD_TOC);
-    if ( where & INTAG ) 
-	mkd_set_flag_num(flagp, MKD_TAGTEXT);
-    else if ( where & INHEAD ) {
-	mkd_set_flag_num(flagp, MKD_NOIMAGE);
-	mkd_set_flag_num(flagp, MKD_NOLINKS);
-    }
-}
-
-
 /* spin() - run through the theme template, looking for <?theme expansions
  */
 void
@@ -480,12 +449,9 @@ spin(FILE *template, MMIOT *doc, FILE *output)
 {
     int c;
     int *p;
-    mkd_flag_t *flags = mkd_flags();
+    int flags;
     int where = 0x0;
     int i;
-    
-    if ( !flags )
-	fail("cannot initialize mkd_flags");
 
     prepare(template);
 
@@ -507,12 +473,17 @@ spin(FILE *template, MMIOT *doc, FILE *output)
 		shift(-1);
 		p = cursor();
 
+		if ( where & INTAG ) 
+		    flags = MKD_TAGTEXT;
+		else if ( where & INHEAD )
+		    flags = MKD_NOIMAGE|MKD_NOLINKS;
+		else
+		    flags = 0;
+
 		for (i=0; i < NR(keyword); i++)
 		    if ( thesame(p, keyword[i].kw) ) {
-			if ( everywhere || (keyword[i].where & where) ) {
-			    setup_flags(flags, where);
+			if ( everywhere || (keyword[i].where & where) )
 			    (*keyword[i].what)(doc,output,flags,where);
-			}
 			break;
 		    }
 
@@ -539,7 +510,6 @@ spin(FILE *template, MMIOT *doc, FILE *output)
 
 	putc(c, output);
     }
-    mkd_free_flags(flags);
 } /* spin */
 
 
@@ -563,17 +533,11 @@ char **argv;
     char *template = "page.theme";
     char *source = "stdin";
     FILE *tmplfile;
+    mkd_flag_t flags = THEME_CF|MKD_TOC;
     int force = 0;
     MMIOT *doc;
     struct stat sourceinfo;
     char *q;
-    mkd_flag_t *flags = mkd_flags();
-
-    if ( !flags ) {
-	perror("mkd_flags");
-	exit(1);
-    }
-    
 
     struct h_opt *opt;
     struct h_context blob;
@@ -599,11 +563,18 @@ char **argv;
 		    break;
 	case 't':   template = hoptarg(&blob);
 		    break;
-	case 'c':   if ( strcmp(hoptarg(&blob), "?") == 0 ) {
-			show_flags(1,0, 0);
+	case 'C':   if ( strcmp(hoptarg(&blob), "?") == 0 ) {
+			show_flags(0,0);
 			exit(0);
 		    }
-		    else if ( q = mkd_set_flag_string(flags, hoptarg(&blob)) )
+		    else
+			flags = strtol(hoptarg(&blob), 0, 0);
+		    break;
+	case 'c':   if ( strcmp(hoptarg(&blob), "?") == 0 ) {
+			show_flags(1,0);
+			exit(0);
+		    }
+		    else if ( q = set_flag(&flags, hoptarg(&blob)) )
 			fprintf(stderr,"%s: unknown option <%s>", pgm, q);
 		    break;		    
 	case 'o':   output_file = hoptarg(&blob);
@@ -691,7 +662,5 @@ char **argv;
 	mkd_generatehtml(doc, stdout);
 
     mkd_cleanup(doc);
-    mkd_free_flags(flags);
     exit(0);
 }
-

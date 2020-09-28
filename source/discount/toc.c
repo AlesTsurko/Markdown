@@ -15,9 +15,6 @@
 #include "markdown.h"
 #include "amalloc.h"
 
-/* inport from Csio.c */
-extern void Csreparse(Cstring *, char *, int, mkd_flag_t*);
-    
 /* write an header index
  */
 int
@@ -28,21 +25,14 @@ mkd_toc(Document *p, char **doc)
     Cstring res;
     int size;
     int first = 1;
-#if HAVE_NAMED_INITIALIZERS
-    static mkd_flag_t islabel = { { [IS_LABEL] = 1 } };
-#else
-    mkd_flag_t islabel;
-
-    mkd_init_flags(&islabel);
-    set_mkd_flag(&islabel, IS_LABEL);
-#endif
+    extern void Csreparse(Cstring *, char *, int, mkd_flag_t);
     
     
     if ( !(doc && p && p->ctx) ) return -1;
 
     *doc = 0;
     
-    if ( ! is_flag_set(&p->ctx->flags, MKD_TOC) ) return 0;
+    if ( ! is_flag_set(p->ctx->flags, MKD_TOC) ) return 0;
 
     CREATE(res);
     RESERVE(res, 100);
@@ -78,7 +68,7 @@ mkd_toc(Document *p, char **doc)
 					 &res,1,p->ctx);
 		    Csprintf(&res, "\">");
 		    Csreparse(&res, T(srcp->text->text),
-				    S(srcp->text->text), &islabel);
+				    S(srcp->text->text), IS_LABEL);
 		    Csprintf(&res, "</a>");
 
 		    first = 0;

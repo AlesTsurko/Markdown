@@ -74,6 +74,4 @@
 
 #define TABSTOP @TABSTOP@
 
-#define DESTRUCTOR
-
 #endif /* _CONFIG_D */
