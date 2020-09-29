@@ -29,17 +29,18 @@ Markdown
 
 ## Tests
 
-`OUTPUT.html` is generated using `markdown` from
+`tests/OUTPUT.html` is generated using `markdown` from
 [discount](https://github.com/Orc/discount) with this command:
 
 ```
 markdown -oOUTPUT.html -fnopants,fencedcode,githubtags,urlencodedanchor TEST.md
 ```
 
-The `TEST.md` is from this repository: [https://github.com/mxstbr/markdown-test-file](https://github.com/mxstbr/markdown-test-file)
+The `tests/TEST.md` is from this repository:
+[https://github.com/mxstbr/markdown-test-file](https://github.com/mxstbr/markdown-test-file)
 
-To run tests `cd` to `tests` and:
+To run tests:
 
 ```shell
-$ io run.io
+$ io tests/run.io
 ```
