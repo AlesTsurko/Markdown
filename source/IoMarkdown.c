@@ -45,7 +45,7 @@ IoObject *IoMarkdown_proto(void *state)
     // with NULLs
     {
         IoMethodTable methodTable[] = {
-            {"toHTML", IoMarkdown_toHTML},
+            {"toHtml", IoMarkdown_toHtml},
             {NULL, NULL},
         };
         IoObject_addMethodTable_(self, methodTable);
@@ -84,8 +84,8 @@ void IoMarkdown_free(IoMarkdown *self)
 
 // -------------------------------------------------------------------------------
 
-//doc Markdown toHTML(string) Gets markdown string as input and returns generated HTML.
-IoObject *IoMarkdown_toHTML(IoMarkdown *self, IoObject *locals, IoMessage *m)
+//doc Markdown toHtml(string) Gets markdown string as input and returns generated Html.
+IoObject *IoMarkdown_toHtml(IoMarkdown *self, IoObject *locals, IoMessage *m)
 {
     IoSeq *input = IoMessage_locals_seqArgAt_(m, locals, 0);
     char *html = 0;

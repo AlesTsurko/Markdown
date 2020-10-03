@@ -1,4 +1,4 @@
 //metadoc Sequence category API
 //metadoc Sequence description Sequence extension.
-//doc Sequence markdownToHTML Inteprets the sequence as a markdown and returns HTML code.
-Sequence markdownToHTML := method(Markdown toHTML(self))
+//doc Sequence markdownToHtml Inteprets the sequence as a markdown and returns Html code.
+Sequence markdownToHtml := method(Markdown toHtml(self))

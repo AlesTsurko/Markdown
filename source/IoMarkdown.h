@@ -21,6 +21,6 @@ IoObject *IoMarkdown_mark(IoMarkdown *self);
 void     IoMarkdown_free(IoMarkdown *self);
 
 // define our custom C functions
-IoObject *IoMarkdown_toHTML(IoMarkdown *self, IoObject *locals, IoMessage *m);
+IoObject *IoMarkdown_toHtml(IoMarkdown *self, IoObject *locals, IoMessage *m);
 
 #endif

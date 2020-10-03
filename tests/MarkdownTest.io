@@ -6,7 +6,7 @@ MarkdownTest := UnitTest clone do(
         testsPath := Directory currentWorkingDirectory
         input := File with(testsPath .. "/tests/TEST.md") contents
         expected := File with(testsPath .. "/tests/OUTPUT.html") contents
-        converted := Markdown toHTML(input) .. "\n"
+        converted := Markdown toHtml(input) .. "\n"
 
         assertEquals(converted, expected)
     )
@@ -15,7 +15,7 @@ MarkdownTest := UnitTest clone do(
         testsPath := Directory currentWorkingDirectory
         input := File with(testsPath .. "/tests/TEST.md") contents
         expected := File with(testsPath .. "/tests/OUTPUT.html") contents
-        converted := input markdownToHTML .. "\n"
+        converted := input markdownToHtml .. "\n"
 
         assertEquals(converted, expected)
     )

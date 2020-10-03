@@ -1,6 +1,6 @@
 {
   "name":         "Markdown",
-  "version":      "1.0",
+  "version":      "1.0.1",
   "description":  "Markdown parser for Io.",
   "author":       "Ales Tsurko",
   "website":      "",
